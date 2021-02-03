@@ -4,7 +4,7 @@
 
 ## Pelipper in a nutshell
 
-In the first pokemonm mistery dugueon, pelipper was the one who deliver notices to the
+In the first pokemon mistery dugueon, pelipper was the one who deliver notices to the
 rescue team, therefore, this service accomplish this task. Pelipper is a service trought the
 one you can deliver email and phones notifications letting your other services to forget
 about this tedious task.
