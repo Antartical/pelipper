@@ -1,0 +1,40 @@
+version: '3'
+services:
+
+  ##############################################################################
+  #                                   SMTP                                     #
+  ##############################################################################
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog
+    ports: 
+      - 1025:1025
+      - 8025:8025
+    networks:
+      - mailhog-network
+
+  ##############################################################################
+  #                                 PELIPPER                                   #
+  ##############################################################################
+  pelipper:
+    build:
+      context: .
+      dockerfile: build/docker/dockerfile.local
+    container_name: pelipper
+    restart: always
+    command: "gin --appPort 9000 --all -i run main.go"
+    volumes:
+      - ./:/api/
+    ports:
+      - "9000:9000"
+    env_file:
+      - ./build/env/.env
+    networks:
+      - mailhog-network
+
+################################################################################
+#                                   NETWORKS                                   #
+################################################################################
+networks:
+  mailhog-network:
+    driver: bridge
