@@ -1,4 +1,6 @@
-<div style="text-align:center"><img src="https://img1.freepng.es/20180720/upe/kisspng-beak-deviantart-pelipper-clip-art-rocko-s-modern-life-5b527babad81b1.1171937615321322677107.jpg" /></div>
+<p align="center">
+  <img width="200" height="180" src="https://ih1.redbubble.net/image.511501561.2977/st,small,507x507-pad,600x600,f8f8f8.u7.jpg">
+</p>
 
 ## Pelipper in a nutshell
 
