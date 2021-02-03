@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="200" height="180" src="https://ih1.redbubble.net/image.511501561.2977/st,small,507x507-pad,600x600,f8f8f8.u7.jpg">
+  <img width="250" height="250" src="https://ih1.redbubble.net/image.511501561.2977/st,small,507x507-pad,600x600,f8f8f8.u7.jpg">
 </p>
 
 ## Pelipper in a nutshell
