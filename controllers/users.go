@@ -1,30 +1,18 @@
 package controllers
 
-/*
-This module contains handlers for users notifications
-*/
-
 import (
 	"net/http"
-	"os"
 
 	"github.com/gin-gonic/gin"
 
-	helpers "pelipper/helpers"
+	mails "pelipper/mails"
+	models "pelipper/models"
 	validators "pelipper/validators"
 )
 
 /*
-EmailUserVerification -> handler for /email/user/verify
-
-This endpoint will send the verification link to the given
-email. The payload must match the following schema:
-
-{
-	"email": "",
-	"name": "",
-	"verification_link": ""
-}
+EmailUserVerification -> handler for /email/user/verify.
+Sends the user verification email.
 */
 func EmailUserVerification(c *gin.Context) {
 	var input validators.EmailUserVerificationValidator
@@ -33,19 +21,18 @@ func EmailUserVerification(c *gin.Context) {
 		return
 	}
 
-	templateData := validators.EmailUserVerificationTemplateData{
-		Name:             input.Name,
-		VerificationLink: input.VerificationLink,
+	email := models.Email{
+		To:       input.To,
+		Subject:  input.Subject,
+		Template: "user_verification.html",
+		TemplateData: mails.EmailUserVerificationTemplateData{
+			Name:             input.Name,
+			VerificationLink: input.VerificationLink,
+		},
+		Sender: models.NewEmailSMTPSender(input.From),
 	}
-	err := helpers.SendEmail(
-		os.Getenv("HODOR_SENDER"),
-		input.Email,
-		"Verify your account",
-		"hodor/user_verification.html",
-		templateData,
-	)
 
-	if err != nil {
+	if err := email.Deliver(); err != nil {
 		panic(err)
 	}
 	c.JSON(http.StatusCreated, nil)

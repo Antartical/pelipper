@@ -1,10 +1,5 @@
 package controllers
 
-/*
-This modules contains Ping handler which will be use to healthcheck
-the service
-*/
-
 import (
 	"net/http"
 
