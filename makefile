@@ -10,6 +10,9 @@ local.start:
 local.down:
 	@docker-compose down
 
+local.test:
+	@docker-compose exec pelipper go test ./... -cover
+
 logs:
 	@docker logs -f $(shell docker-compose ps -q pelipper)
 

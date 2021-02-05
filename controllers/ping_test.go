@@ -12,20 +12,24 @@ import (
 func TestPing(t *testing.T) {
 	assert := require.New(t)
 	var response gin.H
-	expected_response := gin.H{
-		"data": "pong",
-	}
 
-	recorder := httptest.NewRecorder()
-	c, _ := gin.CreateTestContext(recorder)
-	Ping(c)
+	t.Run("Test ping successfully", func(t *testing.T) {
+		expected_response := gin.H{
+			"data": "pong",
+		}
 
-	err := json.Unmarshal(recorder.Body.Bytes(), &response)
+		recorder := httptest.NewRecorder()
+		c, _ := gin.CreateTestContext(recorder)
+		Ping(c)
 
-	if err != nil {
-		assert.Fail("Payload does not match with the expected one")
-	}
+		err := json.Unmarshal(recorder.Body.Bytes(), &response)
 
-	assert.Equal(recorder.Result().StatusCode, 200)
-	assert.Equal(expected_response, response)
+		if err != nil {
+			assert.Fail("Payload does not match with the expected one")
+		}
+
+		assert.Equal(recorder.Result().StatusCode, 200)
+		assert.Equal(expected_response, response)
+	})
+
 }

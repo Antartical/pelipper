@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"net/smtp"
 	"os"
 	"pelipper/mails"
@@ -30,9 +31,9 @@ func mockSend(err error) (func(string, smtp.Auth, string, []string, []byte) erro
 	}, r
 }
 
-func TestEmailDeliverSuccessfully(t *testing.T) {
-	assert := require.New(t)
+func TestEmailDeliver(t *testing.T) {
 
+	assert := require.New(t)
 	to := "test@test.com"
 	from := "http://test.com"
 	addr := os.Getenv("SMTP_HOST") + ":" + os.Getenv("SMTP_PORT")
@@ -41,63 +42,64 @@ func TestEmailDeliverSuccessfully(t *testing.T) {
 		os.Getenv("SMTP_PASSWORD"),
 	)
 
-	mockFunction, mockRegister := mockSend(nil)
-	email := Email{
-		To:       to,
-		Subject:  "test",
-		Template: "user_verification.html",
-		TemplateData: mails.EmailUserVerificationTemplateData{
-			Name:             "test",
-			VerificationLink: "http://test.com",
-		},
-		Sender: EmailSMTPSender{
-			config: NewSMTPConfig(from),
-			send:   mockFunction,
-		},
-	}
+	t.Run("Test email deliver successfully", func(t *testing.T) {
+		mockFunction, mockRegister := mockSend(nil)
+		email := Email{
+			To:       to,
+			Subject:  "test",
+			Template: "user_verification.html",
+			TemplateData: mails.EmailUserVerificationTemplateData{
+				Name:             "test",
+				VerificationLink: "http://test.com",
+			},
+			Sender: EmailSMTPSender{
+				config: NewSMTPConfig(from),
+				send:   mockFunction,
+			},
+		}
 
-	email.Deliver()
-	assert.Equal([]string{to}, mockRegister.to)
-	assert.Equal(from, mockRegister.from)
-	assert.Equal(addr, mockRegister.addr)
-	assert.Equal(auth, mockRegister.auth)
-}
+		email.Deliver()
+		assert.Equal([]string{to}, mockRegister.to)
+		assert.Equal(from, mockRegister.from)
+		assert.Equal(addr, mockRegister.addr)
+		assert.Equal(auth, mockRegister.auth)
+	})
 
-func TestEmailDeliverTemplateError(t *testing.T) {
-	assert := require.New(t)
+	t.Run("Test email deliver with template error", func(t *testing.T) {
+		assert := require.New(t)
 
-	email := Email{
-		To:       "test",
-		Subject:  "test",
-		Template: "user_verification.html",
-		TemplateData: mails.EmailUserVerificationTemplateData{
-			Name:             "test",
-			VerificationLink: "http://test.com",
-		},
-		Sender: NewEmailSMTPSender("from@from.com"),
-	}
+		email := Email{
+			To:       to,
+			Subject:  "test",
+			Template: "unknown.html",
+			TemplateData: mails.EmailUserVerificationTemplateData{
+				Name:             "test",
+				VerificationLink: "http://test.com",
+			},
+			Sender: NewEmailSMTPSender(from),
+		}
 
-	assert.Nil(email.Deliver())
+		assert.NotNil(email.Deliver())
+	})
 
-}
+	t.Run("Test email deliver SMTP error", func(t *testing.T) {
+		assert := require.New(t)
 
-func TestEmailDeliverSMTPError(t *testing.T) {
-	assert := require.New(t)
+		mockFunction, _ := mockSend(errors.New("Test error"))
+		email := Email{
+			To:       to,
+			Subject:  "test",
+			Template: "user_verification.html",
+			TemplateData: mails.EmailUserVerificationTemplateData{
+				Name:             "test",
+				VerificationLink: "http://test.com",
+			},
+			Sender: EmailSMTPSender{
+				config: NewSMTPConfig(from),
+				send:   mockFunction,
+			},
+		}
 
-	mockFunction, _ := mockSend(nil)
-	email := Email{
-		To:       "test@test.com",
-		Subject:  "test",
-		Template: "user_verification.html",
-		TemplateData: mails.EmailUserVerificationTemplateData{
-			Name:             "test",
-			VerificationLink: "http://test.com",
-		},
-		Sender: EmailSMTPSender{
-			config: NewSMTPConfig("http://test.com"),
-			send:   mockFunction,
-		},
-	}
-
-	assert.Nil(email.Deliver())
+		assert.NotNil(email.Deliver())
+	})
 }

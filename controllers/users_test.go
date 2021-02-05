@@ -1,11 +1,15 @@
 package controllers
 
-import "testing"
+import (
+	"testing"
+)
 
-func TestEmailUserVerifySuccess(t *testing.T) {
+func TestEmailUserVerify(t *testing.T) {
+	t.Run("Test send email user successfully", func(t *testing.T) {
 
-}
+	})
 
-func TestEmailUserVerifyBadRequest(t *testing.T) {
+	t.Run("Test send email bad request", func(t *testing.T) {
 
+	})
 }
