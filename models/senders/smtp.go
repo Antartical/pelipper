@@ -1,4 +1,4 @@
-package models
+package senders
 
 import (
 	"net/smtp"
@@ -34,8 +34,8 @@ func NewSMTPConfig(sender string) SMTPConfig {
 EmailSMTPSender -> email smtp sender
 */
 type EmailSMTPSender struct {
-	config SMTPConfig
-	send   func(string, smtp.Auth, string, []string, []byte) error
+	config    SMTPConfig
+	sendEmail func(string, smtp.Auth, string, []string, []byte) error
 }
 
 /*
@@ -52,5 +52,5 @@ Send -> sends the given body to the given receivers
 func (e EmailSMTPSender) Send(to []string, body []byte) error {
 	addr := e.config.Host + ":" + e.config.Port
 	auth := smtp.CRAMMD5Auth(e.config.User, e.config.Password)
-	return e.send(addr, auth, e.config.Sender, to, body)
+	return e.sendEmail(addr, auth, e.config.Sender, to, body)
 }

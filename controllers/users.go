@@ -5,8 +5,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"pelipper/notices"
 	"pelipper/models"
+	"pelipper/models/senders"
+	"pelipper/notices"
 	"pelipper/validators"
 )
 
@@ -29,7 +30,7 @@ func EmailUserVerification(c *gin.Context) {
 			Name:             input.Name,
 			VerificationLink: input.VerificationLink,
 		},
-		Sender: models.NewEmailSMTPSender(input.From),
+		Sender: senders.NewEmailSMTPSender(input.From),
 	}
 
 	if err := email.Deliver(); err != nil {

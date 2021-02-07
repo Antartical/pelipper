@@ -11,6 +11,13 @@ import (
 const mimeHeaders = "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n\n"
 
 /*
+EmailSender -> interface for email delivery
+*/
+type EmailSender interface {
+	Send(to []string, body []byte) error
+}
+
+/*
 Email -> email struct
 */
 type Email struct {
