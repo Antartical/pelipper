@@ -11,17 +11,25 @@ local.down:
 	@docker-compose down
 
 local.test:
-	@docker-compose exec pelipper go test ./... -cover
+	@docker exec pelipper go test ./... -cover
+
+local.coverage.generate_report:
+	@docker exec pelipper go test -coverprofile coverage.out ./...
+
+local.coverage.open_report:
+	go tool cover -html=coverage.out
 
 logs:
 	@docker logs -f $(shell docker-compose ps -q pelipper)
 
 sh:
-	@docker-compose exec pelipper /bin/sh
+	@docker exec -it pelipper /bin/sh
 
 start: local.start
 
 stop: local.down
+
+coverage_report: local.coverage.generate_report local.coverage.open_report
 
 renew: local.down local.build local.start
 

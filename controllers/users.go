@@ -5,9 +5,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	mails "pelipper/mails"
-	models "pelipper/models"
-	validators "pelipper/validators"
+	"pelipper/notices"
+	"pelipper/models"
+	"pelipper/validators"
 )
 
 /*
@@ -25,7 +25,7 @@ func EmailUserVerification(c *gin.Context) {
 		To:       input.To,
 		Subject:  input.Subject,
 		Template: "user_verification.html",
-		TemplateData: mails.EmailUserVerificationTemplateData{
+		TemplateData: notices.EmailUserVerificationTemplateData{
 			Name:             input.Name,
 			VerificationLink: input.VerificationLink,
 		},

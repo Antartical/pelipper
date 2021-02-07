@@ -1,4 +1,4 @@
-package mails
+package notices
 
 /*
 EmailUserVerificationTemplateData -> user_verification.html

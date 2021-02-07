@@ -4,7 +4,7 @@ import (
 	"errors"
 	"net/smtp"
 	"os"
-	"pelipper/mails"
+	"pelipper/notices"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -48,7 +48,7 @@ func TestEmailDeliver(t *testing.T) {
 			To:       to,
 			Subject:  "test",
 			Template: "user_verification.html",
-			TemplateData: mails.EmailUserVerificationTemplateData{
+			TemplateData: notices.EmailUserVerificationTemplateData{
 				Name:             "test",
 				VerificationLink: "http://test.com",
 			},
@@ -72,7 +72,7 @@ func TestEmailDeliver(t *testing.T) {
 			To:       to,
 			Subject:  "test",
 			Template: "unknown.html",
-			TemplateData: mails.EmailUserVerificationTemplateData{
+			TemplateData: notices.EmailUserVerificationTemplateData{
 				Name:             "test",
 				VerificationLink: "http://test.com",
 			},
@@ -90,7 +90,7 @@ func TestEmailDeliver(t *testing.T) {
 			To:       to,
 			Subject:  "test",
 			Template: "user_verification.html",
-			TemplateData: mails.EmailUserVerificationTemplateData{
+			TemplateData: notices.EmailUserVerificationTemplateData{
 				Name:             "test",
 				VerificationLink: "http://test.com",
 			},
