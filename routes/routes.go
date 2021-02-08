@@ -1,7 +1,8 @@
 package routes
 
 import (
-	controllers "pelipper/controllers"
+	"pelipper/controllers"
+	"pelipper/services"
 
 	"github.com/gin-gonic/gin"
 )
@@ -10,7 +11,6 @@ import (
 Routes -> resgister backend routes in the given router
 */
 func Routes(router *gin.Engine) {
-	router.GET("/ping", controllers.Ping)
-
-	router.POST("/emails/users/verify", controllers.EmailUserVerification)
+	controllers.RegisterPingRoutes(router)
+	controllers.RegisterUserRoutes(router, services.NewSMTPEmailService())
 }
