@@ -2,6 +2,7 @@ package senders
 
 import (
 	"net/smtp"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -26,10 +27,8 @@ func mockSend(err error) (func(string, smtp.Auth, string, []string, []byte) erro
 func TestSMTPConfig(t *testing.T) {
 	assert := require.New(t)
 	t.Run("Test SMTPConfig constructor", func(t *testing.T) {
-		sender := "test@test.com"
-		smtpConfig := NewSMTPConfig(sender)
-
-		assert.Equal(smtpConfig.Sender, sender)
+		smtpConfig := NewSMTPConfig()
+		assert.Equal(smtpConfig.Host, os.Getenv("SMTP_HOST"))
 	})
 }
 
@@ -37,10 +36,8 @@ func TestEmailSMTPSender(t *testing.T) {
 	assert := require.New(t)
 
 	t.Run("Test EmailSMTPSender constructor", func(t *testing.T) {
-		sender := "test@test.com"
-		emailSMTPSender := NewEmailSMTPSender(sender)
-
-		assert.Equal(emailSMTPSender.config.Sender, sender)
+		emailSMTPSender := NewEmailSMTPSender()
+		assert.Equal(emailSMTPSender.config.Host, os.Getenv("SMTP_HOST"))
 	})
 
 	t.Run("Test EmailSMTPSender Send", func(t *testing.T) {
@@ -49,14 +46,14 @@ func TestEmailSMTPSender(t *testing.T) {
 		body := []byte("Hello")
 		mockSendEmail, recorder := mockSend(nil)
 		sender := EmailSMTPSender{
-			config:    NewSMTPConfig(from),
+			config:    NewSMTPConfig(),
 			sendEmail: mockSendEmail,
 		}
 
 		expectedAddr := sender.config.Host + ":" + sender.config.Port
 		expectedAuth := smtp.CRAMMD5Auth(sender.config.User, sender.config.Password)
 
-		sender.Send(to, body)
+		sender.Send(from, to, body)
 
 		assert.Equal(recorder.addr, expectedAddr)
 		assert.Equal(recorder.auth, expectedAuth)

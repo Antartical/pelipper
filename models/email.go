@@ -14,13 +14,14 @@ const mimeHeaders = "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-
 IEmailSender -> interface for email delivery
 */
 type IEmailSender interface {
-	Send(to []string, body []byte) error
+	Send(from string, to []string, body []byte) error
 }
 
 /*
 Email -> email struct
 */
 type Email struct {
+	From         string
 	To           string
 	Subject      string
 	Template     string
@@ -42,5 +43,5 @@ func (e Email) Deliver() error {
 		return err
 	}
 	t.Execute(&body, e.TemplateData)
-	return e.Sender.Send(receivers, body.Bytes())
+	return e.Sender.Send(e.From, receivers, body.Bytes())
 }

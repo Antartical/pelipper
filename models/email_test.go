@@ -14,22 +14,23 @@ import (
 )
 
 type emailSenderMock struct {
-	send func(to []string, body []byte) error
+	send func(from string, to []string, body []byte) error
 }
 
-func (e emailSenderMock) Send(to []string, body []byte) error {
-	return e.send(to, body)
+func (e emailSenderMock) Send(from string, to []string, body []byte) error {
+	return e.send(from, to, body)
 }
 
 type emailSendRecorder struct {
+	from string
 	to   []string
 	body []byte
 }
 
-func mockSend(err error) (func(to []string, body []byte) error, *emailSendRecorder) {
+func mockSend(err error) (func(from string, to []string, body []byte) error, *emailSendRecorder) {
 	r := new(emailSendRecorder)
-	return func(to []string, body []byte) error {
-		*r = emailSendRecorder{to, body}
+	return func(from string, to []string, body []byte) error {
+		*r = emailSendRecorder{from, to, body}
 		return err
 	}, r
 }
@@ -48,13 +49,13 @@ func TestEmailDeliver(t *testing.T) {
 	}
 
 	t.Run("Test email deliver successfully", func(t *testing.T) {
-		mockSend, sendRecorder := mockSend(nil)
+		mockSendF, sendRecorder := mockSend(nil)
 		email := Email{
 			To:           to,
 			Subject:      subject,
 			Template:     templateSuccess,
 			TemplateData: templateSuccessData,
-			Sender:       emailSenderMock{mockSend},
+			Sender:       emailSenderMock{mockSendF},
 		}
 
 		var expectedBody bytes.Buffer
@@ -71,13 +72,13 @@ func TestEmailDeliver(t *testing.T) {
 
 	t.Run("Test email deliver with template error", func(t *testing.T) {
 
-		mockSend, _ := mockSend(nil)
+		mockSendF, _ := mockSend(nil)
 		email := Email{
 			To:           to,
 			Subject:      subject,
 			Template:     templateError,
 			TemplateData: templateSuccessData,
-			Sender:       emailSenderMock{mockSend},
+			Sender:       emailSenderMock{mockSendF},
 		}
 
 		assert.NotNil(email.Deliver())

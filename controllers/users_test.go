@@ -3,6 +3,7 @@ package controllers
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"pelipper/notices"
@@ -87,6 +88,40 @@ func TestEmailUserVerify(t *testing.T) {
 	})
 
 	t.Run("Test send email bad request", func(t *testing.T) {
+		emailService := newEmailServiceMock(nil)
+		router := setupUsersRouter(emailService)
+		payload, _ := json.Marshal(map[string]string{
+			"wrong": "Oh no!",
+		})
+		recorder := httptest.NewRecorder()
+		request, _ := http.NewRequest(
+			"POST", "/emails/users/verify", bytes.NewBuffer(payload),
+		)
+		router.ServeHTTP(recorder, request)
+		assert.Equal(recorder.Result().StatusCode, http.StatusBadRequest)
+	})
 
+	t.Run("Test send email error", func(t *testing.T) {
+		emailService := newEmailServiceMock(errors.New("Failed :D"))
+		router := setupUsersRouter(emailService)
+
+		from := "test@test.com"
+		to := "test-receiver@test.com"
+		subject := "Test email"
+		name := "Test misco"
+		verificationLink := "http://test.test"
+		payload, _ := json.Marshal(map[string]string{
+			"from":              from,
+			"to":                to,
+			"subject":           subject,
+			"Name":              name,
+			"verification_link": verificationLink,
+		})
+		recorder := httptest.NewRecorder()
+		request, _ := http.NewRequest(
+			"POST", "/emails/users/verify", bytes.NewBuffer(payload),
+		)
+		router.ServeHTTP(recorder, request)
+		assert.Equal(recorder.Result().StatusCode, http.StatusInternalServerError)
 	})
 }

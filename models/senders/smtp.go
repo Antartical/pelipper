@@ -13,20 +13,18 @@ type SMTPConfig struct {
 	Password string
 	Host     string
 	Port     string
-	Sender   string
 }
 
 /*
 NewSMTPConfig -> creates a new SMTPConfig from the given
 sender
 */
-func NewSMTPConfig(sender string) SMTPConfig {
+func NewSMTPConfig() SMTPConfig {
 	return SMTPConfig{
 		User:     os.Getenv("SMTP_USER"),
 		Password: os.Getenv("SMTP_PASSWORD"),
 		Host:     os.Getenv("SMTP_HOST"),
 		Port:     os.Getenv("SMTP_PORT"),
-		Sender:   sender,
 	}
 }
 
@@ -42,15 +40,15 @@ type EmailSMTPSender struct {
 NewEmailSMTPSender -> creates a new emailSMTPSender from the given
 sender
 */
-func NewEmailSMTPSender(sender string) EmailSMTPSender {
-	return EmailSMTPSender{NewSMTPConfig(sender), smtp.SendMail}
+func NewEmailSMTPSender() EmailSMTPSender {
+	return EmailSMTPSender{NewSMTPConfig(), smtp.SendMail}
 }
 
 /*
 Send -> sends the given body to the given receivers
 */
-func (e EmailSMTPSender) Send(to []string, body []byte) error {
+func (e EmailSMTPSender) Send(from string, to []string, body []byte) error {
 	addr := e.config.Host + ":" + e.config.Port
 	auth := smtp.CRAMMD5Auth(e.config.User, e.config.Password)
-	return e.sendEmail(addr, auth, e.config.Sender, to, body)
+	return e.sendEmail(addr, auth, from, to, body)
 }

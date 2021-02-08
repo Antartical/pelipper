@@ -12,5 +12,5 @@ Routes -> resgister backend routes in the given router
 */
 func Routes(router *gin.Engine) {
 	controllers.RegisterPingRoutes(router)
-	controllers.RegisterUserRoutes(router, services.SMTPEmailService{})
+	controllers.RegisterUserRoutes(router, services.NewSMTPEmailService())
 }
