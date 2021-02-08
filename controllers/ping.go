@@ -7,6 +7,13 @@ import (
 )
 
 /*
+RegisterPingRoutes -> register ping endpoints to the given router
+*/
+func RegisterPingRoutes(router *gin.Engine) {
+	router.GET("/ping", Ping)
+}
+
+/*
 Ping -> handler for /ping route
 */
 func Ping(c *gin.Context) {

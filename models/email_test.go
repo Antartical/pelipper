@@ -13,11 +13,11 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-type EmailSenderMock struct {
+type emailSenderMock struct {
 	send func(to []string, body []byte) error
 }
 
-func (e EmailSenderMock) Send(to []string, body []byte) error {
+func (e emailSenderMock) Send(to []string, body []byte) error {
 	return e.send(to, body)
 }
 
@@ -54,7 +54,7 @@ func TestEmailDeliver(t *testing.T) {
 			Subject:      subject,
 			Template:     templateSuccess,
 			TemplateData: templateSuccessData,
-			Sender:       EmailSenderMock{mockSend},
+			Sender:       emailSenderMock{mockSend},
 		}
 
 		var expectedBody bytes.Buffer
@@ -77,7 +77,7 @@ func TestEmailDeliver(t *testing.T) {
 			Subject:      subject,
 			Template:     templateError,
 			TemplateData: templateSuccessData,
-			Sender:       EmailSenderMock{mockSend},
+			Sender:       emailSenderMock{mockSend},
 		}
 
 		assert.NotNil(email.Deliver())
@@ -91,7 +91,7 @@ func TestEmailDeliver(t *testing.T) {
 			Subject:      subject,
 			Template:     templateSuccess,
 			TemplateData: templateSuccessData,
-			Sender:       EmailSenderMock{mockSend},
+			Sender:       emailSenderMock{mockSend},
 		}
 		assert.NotNil(email.Deliver())
 	})
