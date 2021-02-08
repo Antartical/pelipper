@@ -1,6 +1,8 @@
 package services
 
 import (
+	"pelipper/models/senders"
+	"pelipper/notices"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -33,13 +35,22 @@ func TestSMTPEmailService(t *testing.T) {
 	from := "test@test.com"
 	to := "test@test.com"
 	subject := "test"
+	templateSuccessData := notices.EmailUserVerificationTemplateData{
+		Name:             "test",
+		VerificationLink: "http://test.com",
+	}
+
+	t.Run("Test SMTP email service constructor", func(t *testing.T) {
+		emailService := NewSMTPEmailService()
+		assert.IsType(emailService.sender, senders.NewEmailSMTPSender())
+	})
 
 	t.Run("Test SendEmail", func(t *testing.T) {
 		mockSendF, sendRecorder := mockSend(nil)
 		emailService := EmailService{sender: emailSenderMock{mockSendF}}
-		emailService.SendEmail(from, to, subject, "", nil)
+		emailService.SendEmail(from, to, subject, "user_verification.html", templateSuccessData)
 
 		assert.Equal(sendRecorder.from, from)
-		assert.Equal(sendRecorder.to, to)
+		assert.Equal(sendRecorder.to, []string{to})
 	})
 }
