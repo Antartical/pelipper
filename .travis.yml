@@ -9,13 +9,22 @@ branches:
 services:
   - docker
 
-before_script:
-  - cp ./build/env/.env.sample ./build/env/.env
-  - go get github.com/mattn/goveralls
+stages:
+  - Test
+  - Github Packages Deploy
 
-script:
-  - make ci_check_tests
-  - $GOPATH/bin/goveralls -coverprofile=coverage.out -service=travis-ci
+jobs:
+  include:
 
-after_success:
-  - if [[ "$TRAVIS_BRANCH" == "master" ]]; make docker_tag_and_push; fi
+    - stage: Test
+      before_script:
+        - cp ./build/env/.env.sample ./build/env/.env
+        - go get github.com/mattn/goveralls
+      script:
+        - make ci_check_tests
+        - $GOPATH/bin/goveralls -coverprofile=coverage.out -service=travis-ci
+
+    - stage: Github Packages Deploy
+        if: branch = master
+        script: make docker_tag_and_push
+
