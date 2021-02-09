@@ -13,17 +13,9 @@ before_script:
   - cp ./build/env/.env.sample ./build/env/.env
   - go get github.com/mattn/goveralls
 
-stages:
+script:
+  - make ci_check_tests
+  - $GOPATH/bin/goveralls -coverprofile=coverage.out -service=travis-ci
 
-  - name: run tests
-    script:
-      - make ci_check_tests
-      - $GOPATH/bin/goveralls -coverprofile=coverage.out -service=travis-ci
-
-  - name: push image
-    if: branch = master
-    script:
-      - echo $GITHUB_TOKEN | docker login ghcr.io -u $GITHUB_USER --password-stdin
-      - docker build -f build/docker/dockerfile.prod -t pelipper:latest -t pelipper:$TRAVIS_COMMIT
-      - docker push ghcr.io/OWNER/pelipper:$TRAVIS_COMMIT
-      - docker push ghcr.io/OWNER/pelipper:latest
+  after_success:
+  - if [[ "$TRAVIS_BRANCH" == "master" ]]; make docker_tag_and_push; fi
