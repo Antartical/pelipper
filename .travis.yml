@@ -17,5 +17,5 @@ script:
   - make ci_check_tests
   - $GOPATH/bin/goveralls -coverprofile=coverage.out -service=travis-ci
 
-  after_success:
+after_success:
   - if [[ "$TRAVIS_BRANCH" == "master" ]]; make docker_tag_and_push; fi
