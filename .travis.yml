@@ -25,6 +25,6 @@ jobs:
         - $GOPATH/bin/goveralls -coverprofile=coverage.out -service=travis-ci
 
     - stage: Github Packages Deploy
-      if: branch = master
+      if: (NOT type IN (pull_request)) AND (branch = master)
       script: make docker_tag_and_push
 
