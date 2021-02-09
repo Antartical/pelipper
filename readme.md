@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.com/Antartical/pelipper.svg?branch=master)](https://travis-ci.com/Antartical/pelipper)
 [![Coverage Status](https://coveralls.io/repos/github/Antartical/pelipper/badge.svg?branch=alvarogf97/add_ci)](https://coveralls.io/github/Antartical/pelipper?branch=alvarogf97/add_ci)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 
 <p align="center">
   <img width="250" height="250" src="https://i.imgur.com/JTRP3z8.jpg">
@@ -34,3 +35,12 @@ Moreover you can perform the following operations:
  - **make sh**: attach a console inside pelipper.
  - **make logs**: show pelipper logs
  - **make local.build**: recompiles pelipper image
+
+## Configure pre-commit (Python3 required)
+pre-commit is a useful tool which checks your files before any commit push preventings fails in early steps.
+
+Install pre-commit is easy:
+```
+pip install pre-commit
+python3 -m pre_commit install
+```
