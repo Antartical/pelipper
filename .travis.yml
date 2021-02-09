@@ -1,0 +1,14 @@
+language: go
+go:
+ - 1.14.4
+
+services:
+  - docker
+
+before_script:
+  - cp ./build/env/.env.sample ./build/env/.env
+  - go get github.com/mattn/goveralls
+
+script:
+  - make ci_check_tests
+  - $GOPATH/bin/goveralls -coverprofile=coverage.out -service=travis-ci
