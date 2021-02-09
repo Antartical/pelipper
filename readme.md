@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.com/Antartical/pelipper.svg?branch=master)](https://travis-ci.com/Antartical/pelipper)
+[![Coverage Status](https://coveralls.io/repos/github/Antartical/pelipper/badge.svg?branch=alvarogf97/add_ci)](https://coveralls.io/github/Antartical/pelipper?branch=alvarogf97/add_ci)
+
 <p align="center">
   <img width="250" height="250" src="https://i.imgur.com/JTRP3z8.jpg">
 </p>
