@@ -41,6 +41,7 @@ func TestEmailSMTPSender(t *testing.T) {
 	})
 
 	t.Run("Test EmailSMTPSender Send", func(t *testing.T) {
+		assert.Fail("")
 		to := []string{"test@test.com"}
 		from := "from-test@test.com"
 		body := []byte("Hello")
