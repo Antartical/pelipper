@@ -56,8 +56,6 @@ mailhog:
   ports: 
     - 1025:1025
     - 8025:8025
-  networks:
-    - mailhog-network
 
 pelipper:
   image: ghcr.io/antartical/pelipper

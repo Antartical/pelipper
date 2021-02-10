@@ -32,6 +32,7 @@ docker_tag_and_push:
 	@docker build -f build/docker/dockerfile.prod -t $(REGISTRY):latest -t $(REGISTRY):$(TRAVIS_COMMIT) .
 	@echo $(GITHUB_TOKEN) | docker login ghcr.io -u $(GITHUB_USER) --password-stdin
 	@docker push $(REGISTRY):$(TRAVIS_COMMIT)
+	@docker push $(REGISTRY):latest
 
 start: local.start
 
