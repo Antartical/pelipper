@@ -32,12 +32,10 @@ docker.ghcr_login:
 	@echo $(GITHUB_TOKEN) | docker login ghcr.io -u $(GITHUB_USER) --password-stdin
 
 docker.prod_build:
-	@docker build -f build/docker/dockerfile.prod -t pelipper:latest -t pelipper:$(TRAVIS_COMMIT) .
+	@docker build -f build/docker/dockerfile.prod -t $(REGISTRY):latest -t $(REGISTRY):$(TRAVIS_COMMIT) .
 
 docker_tag_and_push: docker.ghcr_login docker.prod_build
 	@docker push $(REGISTRY):$(TRAVIS_COMMIT)
-	@docker push $(REGISTRY):latest
-
 
 start: local.start
 
@@ -49,4 +47,4 @@ ci_check_tests: local.start ci.test
 
 renew: local.down local.build local.start
 
-.PHONY:  start stop sh logs renew
+.PHONY:  start stop sh logs renew coverage_report ci_check_tests docker_tag_and_push
