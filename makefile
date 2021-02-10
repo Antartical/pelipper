@@ -28,7 +28,7 @@ logs:
 sh:
 	@docker exec -it pelipper /bin/sh
 
-docker_tag_and_push:  docker.prod_build
+docker_tag_and_push:
 	@docker build -f build/docker/dockerfile.prod -t $(REGISTRY):latest -t $(REGISTRY):$(TRAVIS_COMMIT) .
 	@echo $(GITHUB_TOKEN) | docker login ghcr.io -u $(GITHUB_USER) --password-stdin
 	@docker push $(REGISTRY):$(TRAVIS_COMMIT)
