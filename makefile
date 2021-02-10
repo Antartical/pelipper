@@ -29,9 +29,10 @@ sh:
 	@docker exec -it pelipper /bin/sh
 
 docker_tag_and_push:
-	@docker build -f build/docker/dockerfile.prod -t $(REGISTRY):latest -t $(REGISTRY):$(TRAVIS_COMMIT) .
+	@export TAG=$(date +%d%m%Y-%H%M%S)
+	@docker build -f build/docker/dockerfile.prod -t $(REGISTRY):latest -t $(REGISTRY):$(TAG) .
 	@echo $(GITHUB_TOKEN) | docker login ghcr.io -u $(GITHUB_USER) --password-stdin
-	@docker push $(REGISTRY):$(TRAVIS_COMMIT)
+	@docker push $(REGISTRY):$(TAG)
 	@docker push $(REGISTRY):latest
 
 start: local.start
