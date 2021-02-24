@@ -19,6 +19,7 @@ func RegisterUserRoutes(router *gin.Engine, emailService services.IEmailService)
 		c.Set("emailService", emailService)
 	})
 	users.POST("/verify", EmailUserVerification)
+	users.POST("/change_password", EmailUserChangePassword)
 }
 
 /*
@@ -38,6 +39,35 @@ func EmailUserVerification(c *gin.Context) {
 	templateData := notices.EmailUserVerificationTemplateData{
 		Name:             input.Name,
 		VerificationLink: input.VerificationLink,
+	}
+
+	err := emailService.SendEmail(
+		input.From, input.To, input.Subject, template, templateData,
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	c.JSON(http.StatusCreated, nil)
+}
+
+/*
+EmailUserChangePassword -> handler for /email/user/change_password.
+Sends the user verification email.
+*/
+func EmailUserChangePassword(c *gin.Context) {
+	emailService := c.MustGet("emailService").(services.IEmailService)
+
+	var input validators.EmailUserChangePasswordValidator
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	template := "user_change_password.html"
+	templateData := notices.EmailUserChangePasswordTemplateData{
+		Name:               input.Name,
+		ChangePasswordLink: input.ChangePasswordLink,
 	}
 
 	err := emailService.SendEmail(
