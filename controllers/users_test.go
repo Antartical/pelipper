@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"pelipper/notices"
@@ -160,7 +159,6 @@ func TestEmailUserChangePassword(t *testing.T) {
 
 		err := json.Unmarshal(recorder.Body.Bytes(), &response)
 		if err != nil {
-			fmt.Print(err)
 			assert.Fail("Payload does not match with the expected one")
 		}
 
